@@ -1,25 +1,24 @@
-# diffusion-model-evolution
-Lightweight diffusion models trained from scratch on CIFAR-10 (PyTorch). Evolution from 1.2M to 30M parameters, optimized for low-VRAM GPUs (4 GB).
+# Own Diffusion Models — v1 → v5.1
 
-Пайплайн обучения собственных генеративных диффузионных моделей изображений на PyTorch.  
-От синтетических фигур (v1) до реальных фотографий 128×128 (v5.1).
+Training pipeline for custom generative diffusion image models in PyTorch.  
+From synthetic shapes (v1) to real 128×128 photographs (v5.1).
 
-**Обучено и протестировано на NVIDIA RTX 2050 (4 GB VRAM).**
+**Trained and tested on NVIDIA RTX 2050 (4 GB VRAM).**
 
 ---
 
-## Результаты
+## Results
 
-### Сгенерированные изображения (v5.1, 128×128)
+### Generated Images (v5.1, 128×128)
 
-Промпты: `"a photo of a cat"`, `"a cute puppy"`, `"a photo of a bird"`, `"a green frog"`,
-`"a brown horse"`, `"a deer in nature"`, `"a fluffy dog"`, `"a small kitten"` и другие.
+Prompts: `"a photo of a cat"`, `"a cute puppy"`, `"a photo of a bird"`, `"a green frog"`,
+`"a brown horse"`, `"a deer in nature"`, `"a fluffy dog"`, `"a small kitten"`, and others.
 
-Выходные файлы: `output/own_model_v5/gen_*.bmp` (16 изображений).
+Output files: `output/own_model_v5/gen_*.bmp` (16 images).
 
-### Benchmark — все 5 версий
+### Benchmark — All 5 Versions
 
-#### Архитектура
+#### Architecture
 
 | | **v1 (12.6M)** | **v2 (14.4M)** | **v3 (143.8M)** | **v4 (17.8M)** | **v5.1 (30.0M)** |
 |---|---|---|---|---|---|
@@ -30,7 +29,7 @@ Lightweight diffusion models trained from scratch on CIFAR-10 (PyTorch). Evoluti
 | Conditioning | Hash tokenizer | Hash tokenizer | Hash tokenizer | Class embed | **Class embed** |
 | Latent space | 4ch, 8×8 | 4ch, 16×16 | 4ch, 16×16 | 8ch, 16×16 | **12ch, 32×32** |
 
-#### Производительность (RTX 2050, 4 GB VRAM)
+#### Performance (RTX 2050, 4 GB VRAM)
 
 | | **v1** | **v2** | **v3** | **v4** | **v5.1** |
 |---|---|---|---|---|---|
@@ -40,9 +39,9 @@ Lightweight diffusion models trained from scratch on CIFAR-10 (PyTorch). Evoluti
 | Gen time (avg) | **0.22 s** | 0.35 s | 0.53 s | 0.57 s | 0.61 s |
 | Speed (img/s) | **4.58** | 2.88 | 1.88 | 1.75 | 1.63 |
 
-#### Качество генерации
+#### Generation Quality
 
-| Метрика | **v1** | **v2** | **v3** | **v4** | **v5.1** |
+| Metric | **v1** | **v2** | **v3** | **v4** | **v5.1** |
 |---|---|---|---|---|---|
 | Colorfulness | 0.034 | 0.000 | 0.000 | **0.060** | 0.043 |
 | Sharpness | 0.151 | 0.123 | 0.122 | **0.374** | 0.204 |
@@ -51,75 +50,75 @@ Lightweight diffusion models trained from scratch on CIFAR-10 (PyTorch). Evoluti
 | Pixel std | 0.092 | 0.006 | 0.001 | 0.162 | 0.156 |
 | Gray outputs | 0/8 | 8/8 ❌ | 8/8 ❌ | 0/8 ✅ | 0/8 ✅ |
 
-#### Итоги
+#### Summary
 
-| Категория | Лучшая модель |
+| Category | Best Model |
 |---|---|
-| 🏆 Наименьший размер | **v1** (12.6M, 48 MB) |
-| 🏆 Самая быстрая | **v1** (0.22 с, 4.58 img/s) |
-| 🏆 Минимум VRAM | **v1** (62 MB peak) |
-| 🏆 Наиболее цветная | **v4** (colorfulness 0.060) |
-| 🏆 Наибольшая чёткость | **v4** (sharpness 0.374) |
-| 🏆 Лучший дин. диапазон | **v4** (dynamic range 0.799) |
-| 🏆 **Наибольшее разнообразие** | **v5.1** (diversity 0.390) |
+| 🏆 Smallest size | **v1** (12.6M, 48 MB) |
+| 🏆 Fastest | **v1** (0.22 s, 4.58 img/s) |
+| 🏆 Lowest VRAM | **v1** (62 MB peak) |
+| 🏆 Most colorful | **v4** (colorfulness 0.060) |
+| 🏆 Sharpest | **v4** (sharpness 0.374) |
+| 🏆 Best dynamic range | **v4** (dynamic range 0.799) |
+| 🏆 **Most diverse** | **v5.1** (diversity 0.390) |
 
-Визуальные отчёты: `output/benchmark/*.png`
+Visual reports: `output/benchmark/*.png`
 
 ---
 
-## Эволюция моделей
+## Model Evolution
 
 ### v1 — MiniVAE + MiniUNet (12.6M)
 
-**Первая версия.** Синтетический датасет (круги, квадраты, треугольники).
-MiniVAE с ÷8 downsampling (128→8×8 латент, 4 канала). Hash-токенизатор.
+**First version.** Synthetic dataset (circles, squares, triangles).
+MiniVAE with ÷8 downsampling (128→8×8 latent, 4 channels). Hash tokenizer.
 
-- Скрипт: `train/train_own.py` (653 строки)
-- Результат: размытые цветные фигуры, 64×64
-- Время: 27 с
+- Script: `train/train_own.py` (653 lines)
+- Result: blurry colored shapes, 64×64
+- Time: 27 s
 
 ### v2 — SharpVAE + GAN (14.4M)
 
-**Чёткость.** L1 + Edge (Sobel) + GAN вместо MSE.
-SharpVAE с ÷4, skip-соединениями (16×16 латент).
+**Sharpness.** L1 + Edge (Sobel) + GAN instead of MSE.
+SharpVAE with ÷4, skip connections (16×16 latent).
 
-- Скрипт: `train/train_own_v2.py` (630 строк)
-- Результат: чёткие фигуры, но mode collapse (серые выходы 8/8)
-- Время: 200 с
+- Script: `train/train_own_v2.py` (630 lines)
+- Result: sharp shapes, but mode collapse (gray outputs 8/8)
+- Time: 200 s
 
-### v3 — Масштабирование (143.8M)
+### v3 — Scaling Up (143.8M)
 
-**Масштаб.** UNet 136.6M (каналы [224, 448, 672, 896]).
-12 фигур, 18 цветов, 11 фонов.
+**Scale.** UNet 136.6M (channels [224, 448, 672, 896]).
+12 shapes, 18 colors, 11 backgrounds.
 
-- Скрипт: `train/train_own_v3.py` (620 строк)
-- Результат: mode collapse сохранился (8/8 серых)
-- Время: 486 с (8 мин), 2.2 GB VRAM
+- Script: `train/train_own_v3.py` (620 lines)
+- Result: mode collapse persisted (8/8 gray)
+- Time: 486 s (8 min), 2.2 GB VRAM
 
-### v4 — Реальные фото (17.8M)
+### v4 — Real Photos (17.8M)
 
-**Переход на реальные данные.** CIFAR-10 (30K фото животных).
-GenVAE без skip-соединений. Class embedding + CFG.
+**Transition to real data.** CIFAR-10 (30K animal photos).
+GenVAE without skip connections. Class embedding + CFG.
 
-- Скрипт: `train/train_own_v4.py` (764 строки)
-- Результат: **первые реалистичные изображения**, яркие цвета
-- VAE L1: 0.006 (в 28× лучше v3), UNet loss: −61%
-- Время: 2 062 с (34 мин)
+- Script: `train/train_own_v4.py` (764 lines)
+- Result: **first realistic images**, vivid colors
+- VAE L1: 0.006 (28× better than v3), UNet loss: −61%
+- Time: 2,062 s (34 min)
 
 ### v5.1 — High-res + Attention (30.0M) ★
 
-**Текущая лучшая модель.** 128×128. GenVAEv5 (18.4M) — 12ch латент 32×32.
-UNet (11.5M) с self-attention на 16×16. Cosine β, CosineAnnealingLR, EMA.
+**Current best model.** 128×128. GenVAEv5 (18.4M) — 12ch latent 32×32.
+UNet (11.5M) with self-attention at 16×16. Cosine β, CosineAnnealingLR, EMA.
 
-- Скрипт: `train/train_own_v5.py` (1 210 строк)
-- Результат: **128×128, лучшее diversity (0.39)**
+- Script: `train/train_own_v5.py` (1,210 lines)
+- Result: **128×128, best diversity (0.39)**
 - UNet loss: 1.07→0.71 (−34%)
-- Время: 17 012 с (284 мин), 578 MB peak VRAM
-- Чекпоинт: 229 MB
+- Time: 17,012 s (284 min), 578 MB peak VRAM
+- Checkpoint: 229 MB
 
 ---
 
-## Архитектура v5.1
+## v5.1 Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
@@ -165,18 +164,18 @@ UNet (11.5M) с self-attention на 16×16. Cosine β, CosineAnnealingLR, EMA.
 
 ---
 
-## Быстрый старт
+## Quick Start
 
-### Требования
+### Requirements
 
 - Python 3.10+
-- PyTorch 2.0+ с CUDA
+- PyTorch 2.0+ with CUDA
 - NVIDIA GPU ≥ 4 GB VRAM
 
-### Установка
+### Installation
 
 ```bash
-git clone (https://github.com/FBNonaMe/diffusion-model-evolution.git
+git clone https://github.com/FBNonaMe/diffusion-model-evolution.git
 cd diffusion-model-evolution
 
 python -m venv .venv
@@ -187,30 +186,30 @@ pip install torch torchvision --index-url https://download.pytorch.org/whl/cu124
 pip install -r requirements.txt
 ```
 
-### Обучение
+### Training
 
 ```bash
-# v5.1 — полное обучение (~284 мин на RTX 2050)
+# v5.1 — full training (~284 min on RTX 2050)
 python -m train.train_own_v5 --animals-only
 
-# v5.1 — быстрый тест (~50 мин)
+# v5.1 — quick test (~50 min)
 python -m train.train_own_v5 --animals-only --steps-vae 2000 --steps 3000 \
     --grad-accum 8 --vae-lr 1e-4 --kl-warmup 600 --gan-start 800
 
-# v5.1 — полный прогон (10K UNet шагов)
+# v5.1 — full run (10K UNet steps)
 python -m train.train_own_v5 --animals-only --steps 10000 --steps-vae 2000 \
     --grad-accum 8 --cfg-scale 3.0
 
-# v4 — предыдущая версия (~34 мин)
+# v4 — previous version (~34 min)
 python -m train.train_own_v4 --animals-only
 
-# v1/v2/v3 — синтетика
-python -m train.train_own        # v1, ~27 с
-python -m train.train_own_v2     # v2, ~3 мин
-python -m train.train_own_v3     # v3, ~8 мин
+# v1/v2/v3 — synthetic data
+python -m train.train_own        # v1, ~27 s
+python -m train.train_own_v2     # v2, ~3 min
+python -m train.train_own_v3     # v3, ~8 min
 ```
 
-### Генерация из обученной модели
+### Generate from Trained Model
 
 ```bash
 python -m train.train_own_v5 --load train/own_model_v5.pt
@@ -218,14 +217,14 @@ python -m train.train_own_v5 --load train/own_model_v5.pt --prompt "a fluffy cat
 python -m train.train_own_v5 --load train/own_model_v5.pt --cfg-scale 5.0
 ```
 
-### Бенчмарк
+### Benchmark
 
 ```bash
 python -m train.benchmark
-# → output/benchmark/*.png (6 графиков)
+# → output/benchmark/*.png (6 charts)
 ```
 
-### Сравнение v4 vs v5 (FID)
+### Compare v4 vs v5 (FID)
 
 ```bash
 python -m train.compare_v4_v5
@@ -234,55 +233,55 @@ python -m train.compare_v4_v5
 
 ---
 
-## CLI параметры v5.1
+## CLI Parameters (v5.1)
 
-| Параметр | По умолчанию | Описание |
+| Parameter | Default | Description |
 |---|---|---|
-| `--steps` | 10000 | Шаги обучения UNet |
-| `--steps-vae` | 2000 | Шаги обучения VAE |
+| `--steps` | 10000 | UNet training steps |
+| `--steps-vae` | 2000 | VAE training steps |
 | `--grad-accum` | 8 | Gradient accumulation |
-| `--img-size` | 128 | Разрешение изображений |
-| `--animals-only` | false | Только животные из CIFAR-10 |
-| `--v-prediction` | false | v-prediction вместо ε-prediction |
+| `--img-size` | 128 | Image resolution |
+| `--animals-only` | false | Use only animals from CIFAR-10 |
+| `--v-prediction` | false | v-prediction instead of ε-prediction |
 | `--cfg-scale` | 3.0 | CFG scale |
-| `--vae-lr` | 1e-4 | Learning rate для VAE |
-| `--kl-warmup` | 40% steps | KL warmup шаги |
-| `--gan-start` | 40% steps | Шаг включения GAN loss |
-| `--fid-every` | 5000 | Интервал FID-проверки |
+| `--vae-lr` | 1e-4 | VAE learning rate |
+| `--kl-warmup` | 40% steps | KL warmup steps |
+| `--gan-start` | 40% steps | Step to enable GAN loss |
+| `--fid-every` | 5000 | FID check interval |
 | `--patience` | 3 | Early-stopping patience |
-| `--data-dir` | — | Папка с изображениями |
-| `--load` | — | Загрузить чекпоинт |
-| `--prompt` | — | Текстовый промпт |
-| `--save-path` | `train/own_model_v5.pt` | Путь сохранения |
-| `--output-dir` | `output/own_model_v5` | Папка выходных изображений |
+| `--data-dir` | — | Image data directory |
+| `--load` | — | Load checkpoint |
+| `--prompt` | — | Text prompt |
+| `--save-path` | `train/own_model_v5.pt` | Checkpoint save path |
+| `--output-dir` | `output/own_model_v5` | Output image directory |
 
 ---
 
-## Структура проекта
+## Project Structure
 
 ```
-own_diffusion_models/
-├── README.md                     # Этот файл
-├── requirements.txt              # Зависимости Python
-├── .gitignore                    # Исключения для Git
+cifar10-diffusion-from-scratch/
+├── README.md                     # This file
+├── requirements.txt              # Python dependencies
+├── .gitignore                    # Git exclusions
 │
-├── train/                        # Скрипты обучения
+├── train/                        # Training scripts
 │   ├── __init__.py
-│   ├── train_own.py              # v1: 12.6M, синтетика (653 строки)
-│   ├── train_own_v2.py           # v2: 14.4M, GAN (630 строк)
-│   ├── train_own_v3.py           # v3: 143.8M, масштаб (620 строк)
-│   ├── train_own_v4.py           # v4: 17.8M, CIFAR-10 (764 строки)
+│   ├── train_own.py              # v1: 12.6M, synthetic (653 lines)
+│   ├── train_own_v2.py           # v2: 14.4M, GAN (630 lines)
+│   ├── train_own_v3.py           # v3: 143.8M, scaled up (620 lines)
+│   ├── train_own_v4.py           # v4: 17.8M, CIFAR-10 (764 lines)
 │   ├── train_own_v5.py           # v5.1: 30.0M, 128×128, attention ★
-│   ├── benchmark.py              # Бенчмарк v1–v5 (799 строк)
-│   ├── compare_v4_v5.py          # FID сравнение v4 vs v5
-│   ├── own_model.pt              # Чекпоинт v1 (48 MB)
-│   ├── own_model_v2.pt           # Чекпоинт v2 (55 MB)
-│   ├── own_model_v3.pt           # Чекпоинт v3 (549 MB)
-│   ├── own_model_v4.pt           # Чекпоинт v4 (68 MB)
-│   └── own_model_v5.pt           # Чекпоинт v5.1 (229 MB) ★
+│   ├── benchmark.py              # Benchmark v1–v5 (799 lines)
+│   ├── compare_v4_v5.py          # FID comparison v4 vs v5
+│   ├── own_model.pt              # Checkpoint v1 (48 MB)
+│   ├── own_model_v2.pt           # Checkpoint v2 (55 MB)
+│   ├── own_model_v3.pt           # Checkpoint v3 (549 MB)
+│   ├── own_model_v4.pt           # Checkpoint v4 (68 MB)
+│   └── own_model_v5.pt           # Checkpoint v5.1 (229 MB) ★
 │
-├── output/                       # Результаты
-│   ├── benchmark/                # Графики бенчмарка
+├── output/                       # Results
+│   ├── benchmark/                # Benchmark charts
 │   │   ├── side_by_side.png
 │   │   ├── quality_metrics.png
 │   │   ├── vram_usage.png
@@ -290,57 +289,57 @@ own_diffusion_models/
 │   │   ├── latent_viz.png
 │   │   └── loss_curves.png
 │   ├── compare_v4_v5.html
-│   ├── own_model/                # Выходы v1
-│   ├── own_model_v2/             # Выходы v2
-│   ├── own_model_v3/             # Выходы v3
-│   ├── own_model_v4/             # Выходы v4 (64×64)
-│   └── own_model_v5/             # Выходы v5.1 (128×128) ★
+│   ├── own_model/                # v1 outputs
+│   ├── own_model_v2/             # v2 outputs
+│   ├── own_model_v3/             # v3 outputs
+│   ├── own_model_v4/             # v4 outputs (64×64)
+│   └── own_model_v5/             # v5.1 outputs (128×128) ★
 │       ├── gen_000.bmp ... gen_015.bmp
 │
-└── data/                         # Датасет (auto-download)
+└── data/                         # Dataset (auto-download)
     └── cifar10/                  # CIFAR-10 (~170 MB)
 ```
 
-**Всего:** ~5 000 строк Python в 7 скриптах.
+**Total:** ~5,000 lines of Python across 7 scripts.
 
 ---
 
-## Ключевые решения
+## Key Design Decisions
 
-### NaN в VAE
+### NaN in VAE
 
-GenVAEv5 с `base_ch=128` при 128×128 порождает активации за пределами fp16.  
-**Решение:** fp32 для VAE, fp16 autocast только для UNet/дискриминатора.
+GenVAEv5 with `base_ch=128` at 128×128 produces activations beyond fp16 range.  
+**Solution:** fp32 for VAE, fp16 autocast only for UNet/discriminator.
 
-### KL explosion
+### KL Explosion
 
-KL divergence растёт с 0.15→6.5 к шагу 200 при малом KL weight.  
-**Решение:** KL weight 5e-3→5e-2 с warmup 40%.
+KL divergence grows from 0.15→6.5 by step 200 with low KL weight.  
+**Solution:** KL weight 5e-3→5e-2 with 40% warmup.
 
-### Mode collapse (v2/v3)
+### Mode Collapse (v2/v3)
 
-VAE со skip-соединениями даёт серый выход при генерации из random z.  
-**Решение:** VAE без skip (GenVAE, v4+).
+VAE with skip connections produces gray outputs when generating from random z.  
+**Solution:** VAE without skip connections (GenVAE, v4+).
 
-### Cosine β schedule (v5.1)
+### Cosine β Schedule (v5.1)
 
-Линейный β концентрирует SNR на малых timesteps. Cosine schedule
-даёт равномерное распределение → лучшее diversity (0.39 vs 0.22).
+Linear β concentrates SNR on small timesteps. Cosine schedule
+provides uniform distribution → better diversity (0.39 vs 0.22).
 
 ---
 
 ## Hardware
 
-| Компонент | Значение |
+| Component | Value |
 |---|---|
 | GPU | NVIDIA GeForce RTX 2050 |
 | VRAM | 4096 MB |
 | RAM | 16 GB |
-| ОС | Windows 10 |
+| OS | Windows 10 |
 | Python | 3.13 |
 | PyTorch | 2.6.0+cu124 |
 
-Пиковое VRAM при обучении v5.1: **578 MB** (из 4096 MB).
+Peak VRAM during v5.1 training: **578 MB** (out of 4096 MB).
 
 ---
 
