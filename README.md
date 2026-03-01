@@ -176,8 +176,8 @@ UNet (11.5M) с self-attention на 16×16. Cosine β, CosineAnnealingLR, EMA.
 ### Установка
 
 ```bash
-git clone https://github.com/<your-username>/own-diffusion-models.git
-cd own-diffusion-models
+git clone (https://github.com/FBNonaMe/diffusion-model-evolution.git
+cd diffusion-model-evolution
 
 python -m venv .venv
 .venv\Scripts\activate        # Windows
